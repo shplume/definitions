@@ -3,17 +3,21 @@ package pipelines
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/fengyfei/definitions/pipelines/defs"
+	"github.com/fengyfei/definitions/pipelines/operation"
 )
 
-const (
-	PipelineTypeUnknown = 0
-	PipelineTypeScale   = 100
-	PipelineTypeDelta   = 101
-	PipelineTypeBits    = 200
-)
+var _ DynamicPipeline = (*operation.FactorPipeline)(nil)
 
 type Pipeline interface {
 	Apply(x interface{}) error
+}
+
+type DynamicPipeline interface {
+	Pipeline
+	Prepare(factor float32)
+	GetVariable() defs.KernelVariableHeader
 }
 
 type PipelineDescriptor struct {

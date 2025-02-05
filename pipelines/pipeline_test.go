@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/fengyfei/definitions/pipelines/bits"
+	"github.com/fengyfei/definitions/pipelines/defs"
 	"github.com/fengyfei/definitions/pipelines/operation"
 	"github.com/go-playground/assert/v2"
 )
@@ -39,4 +40,24 @@ func TestBitsPipeline(t *testing.T) {
 	}
 
 	assert.Equal(t, intVal, int64(0x1))
+}
+
+func TestFactorPipeline(t *testing.T) {
+	floatVal := float32(1.0)
+
+	scalePipeline := operation.NewFactorPipeline(defs.PipelineTypeScale, 1, 2, "scale")
+	scalePipeline.Prepare(2)
+	if err := scalePipeline.Apply(&floatVal); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, floatVal, float32(2))
+
+	deltaPipeline := operation.NewFactorPipeline(defs.PipelineTypeDelta, 1, 2, "delta")
+	deltaPipeline.Prepare(3)
+	if err := deltaPipeline.Apply(&floatVal); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, floatVal, float32(5))
 }
